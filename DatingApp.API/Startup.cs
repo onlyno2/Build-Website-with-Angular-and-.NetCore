@@ -41,7 +41,7 @@ namespace DatingApp.API
             // Singleton instance of repository travel around application and reuse in all of the core
             //services.AddSingleton();
             // Transient useful for lightweight services. Each time request create a new instance
-            //services.AddTransient();
+            services.AddTransient<Seed>();
             // Scoped instance create on each request. Only in scopes
             services.AddScoped<IAuthRepository, AuthRepository>(); // this will not change until the signature of repository changed
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -57,7 +57,7 @@ namespace DatingApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -80,6 +80,7 @@ namespace DatingApp.API
             }
 
             // app.UseHttpsRedirection();
+            // seeder.SeedUser(); uncomment this when need to seed data again
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
