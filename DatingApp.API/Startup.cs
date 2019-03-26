@@ -35,7 +35,11 @@ namespace DatingApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                }); // 
             services.AddCors();
             /* Repository */
             // Singleton instance of repository travel around application and reuse in all of the core
@@ -44,6 +48,7 @@ namespace DatingApp.API
             services.AddTransient<Seed>();
             // Scoped instance create on each request. Only in scopes
             services.AddScoped<IAuthRepository, AuthRepository>(); // this will not change until the signature of repository changed
+            services.AddScoped<IDatingRepository, DatingRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters
