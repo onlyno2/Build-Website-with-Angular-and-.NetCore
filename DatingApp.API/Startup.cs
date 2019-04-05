@@ -42,6 +42,7 @@ namespace DatingApp.API
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 }); // Json opt for ReferenceLoopHandlingExeptions 
             services.AddCors();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
             /* Repository */
             // Singleton instance of repository travel around application and reuse in all of the core
